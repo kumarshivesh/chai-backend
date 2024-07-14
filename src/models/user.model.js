@@ -2,6 +2,7 @@ import mongoose, {Schema} from "mongoose";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
+// Define user schema
 const userSchema = new Schema(
     {
         username: {
@@ -52,6 +53,7 @@ const userSchema = new Schema(
     }
 )
 
+// Middleware to hash password before saving
 userSchema.pre("save", async function (next) {
     if(!this.isModified("password")) return next();
 
@@ -59,6 +61,7 @@ userSchema.pre("save", async function (next) {
     next()
 })
 
+// Method to compare entered password with hashed password
 userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password, this.password)
 }
