@@ -26,6 +26,39 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 
+// This code I took from GitHub of a student 
+const deleteImageOnCloudinary = async (imageUrl) => {
+    try {
+        // checking loacalpath 
+        if (!imageUrl) {
+            console.log("image url required");
+            return null;
+        }
+
+        // getting file id 
+        const parts = imageUrl.split("/");
+        const idWithExtension = parts[parts.length - 1];
+        const idWithoutExtension = idWithExtension.split(".");
+        const publicId = idWithoutExtension[0];
+
+        // console.log(publicId);
+        // end of getting file id //
+
+        // delete file on cloudinary 
+        const responce = await cloudinary.uploader.destroy(publicId);
+        if (!responce) {
+            console.log("erorr on uploading");
+        }
+
+        return responce; // for user
+        // end of delete file on cloudinary //
+    } catch (error) {
+        console.log("error on deleting image on cloudinary:", error);
+        fs.unlinkSync(localFilePath);
+        return null;
+    }
+};
 
 
-export {uploadOnCloudinary}
+
+export {uploadOnCloudinary, deleteImageOnCloudinary}
